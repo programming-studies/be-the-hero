@@ -3,7 +3,10 @@ const databaseConnection = require("../database/connection");
 const tableName = 'incidents';
 
 module.exports = {
-    index: async (request, response) => response.json(await databaseConnection(tableName).select('*')),
+    index: async (request, response) => {
+        const { page = 1 } = request.query;
+        response.json(await databaseConnection(tableName).select('*').limit(5).offset((page - 1) * 5))
+    },
     list: async (request, response) => {
         const { id } = request.params;
         return response.json(await databaseConnection(tableName).select('*').where('ong_id', id));
