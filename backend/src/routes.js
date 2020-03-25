@@ -1,7 +1,7 @@
 const express = require("express");
 
+const IncidentsController = require("./controllers/IncidentController");
 const OngController = require("./controllers/OngController");
-const IncidentsController = require("./controllers/IncidentsController");
 
 const routes = express.Router();
 
