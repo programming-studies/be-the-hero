@@ -1,10 +1,11 @@
-const crypto = require("crypto");
 const databaseConnection = require("../database/connection");
 const tableName = 'incidents';
 
 module.exports = {
     index: async (request, response) => {
         const { page = 1 } = request.query;
+        const [ count ] = await databaseConnection(tableName).count();
+        response.header('X-Total-Count', count['count(*)']);
         response.json(await databaseConnection(tableName).select('*').limit(5).offset((page - 1) * 5))
     },
     list: async (request, response) => {
