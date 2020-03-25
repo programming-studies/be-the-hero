@@ -3,7 +3,11 @@ const databaseConnection = require("../database/connection");
 const tableName = 'incidents';
 
 module.exports = {
-    index: async(request, response) => response.json(await databaseConnection(tableName).select('*')),
+    index: async (request, response) => response.json(await databaseConnection(tableName).select('*')),
+    list: async (request, response) => {
+        const { id } = request.params;
+        return response.json(await databaseConnection(tableName).select('*').where('ong_id', id));
+    },
     store: async (request, response) => {
         const { title, description, value } = request.body;
         const ong_id = request.headers.authorization;
@@ -19,5 +23,5 @@ module.exports = {
         }
         await databaseConnection(tableName).where('id', id).delete();
         return response.status(204).send();
-    }
+    },
 }
