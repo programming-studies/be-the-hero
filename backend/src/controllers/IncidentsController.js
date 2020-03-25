@@ -1,13 +1,13 @@
 const crypto = require("crypto");
 const databaseConnection = require("../database/connection");
-const tableName = 'ongs';
+const tableName = 'incidents';
 
 module.exports = {
     index: async(request, response) => response.json(await databaseConnection(tableName).select('*')),
     store: async (request, response) => {
-        const { name, email, whatsapp, city, uf } = request.body;
-        const id = crypto.randomBytes(4).toString('HEX'); // gera 4 bytes e converte em string hexadecimal
-        await databaseConnection(tableName).insert({ id, name, email, whatsapp, city, uf });
+        const { title, description, value } = request.body;
+        const ong_id = request.headers.authorization;
+        const [ id ] = await databaseConnection(tableName).insert({ title, description, value, ong_id });
         return response.json({ id });
     }
 }
