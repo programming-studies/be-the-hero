@@ -16,7 +16,12 @@
   border-radius: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+}
+
+.register-container .content section {
+  width: 100%;
+  max-width: 380px;
 }
 
 .register-container .content section h1 {
@@ -24,13 +29,8 @@
   font-size: 32px;
 }
 
-.register-container .content section {
-  width: 100%;
-  max-width: 300px;
-}
-
 .register-container .content section p {
-  font-size: 10px;
+  font-size: 18px;
   color: #737380;
   line-height: 32px;
 }
