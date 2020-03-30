@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
-import './style.css';
+import "./style.css";
 
 export default function Register() {
-    return (
-        <div>
-            Register
-        </div>
-    )
+  return <div>Register</div>;
 }
