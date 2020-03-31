@@ -1,12 +1,30 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 
 import "./style.css";
 
 import logoImg from "../../assets/logo.svg";
+import api from "../../services/api";
 
 export default function NewIncident() {
+  const ongId = localStorage.getItem("ongId");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [value, setValue] = useState("");
+
+  const history = useHistory();
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      api.post("incidents", {title, description, value}, {headers: {Authorization: ongId}})
+      history.push("/list-cases");
+    } catch (error) {
+      alert("Erro ao salar, favor tentar novamente");
+    }
+  }
+
   return (
     <div className="new-incident-container">
       <div className="content">
@@ -22,10 +40,10 @@ export default function NewIncident() {
             Voltar para home
           </Link>
         </section>
-        <form action="">
-          <input type="text" placeholder="Título do caso" />
-          <textarea cols="30" rows="10" placeholder="Descrição"></textarea>
-          <input type="text" placeholder="Valor em reais" />
+        <form onSubmit={handleSubmit}>
+          <input type="text" value={title} onChange={event => setTitle(event.target.value)} placeholder="Título do caso" />
+          <textarea cols="30" rows="10" value={description} onChange={event => setDescription(event.target.value)} placeholder="Descrição"></textarea>
+          <input type="text" value={value} onChange={event => setValue(event.target.value)} placeholder="Valor em reais" />
           <div className="input-group">
             <Link className="button" to="/">Cancelar</Link>
             <button type="submit" className="button">
