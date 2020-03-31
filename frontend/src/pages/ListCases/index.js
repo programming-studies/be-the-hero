@@ -20,6 +20,15 @@ export default function ListCases() {
     loadIncidents();
   }, [ongId]);
 
+  async function handleDelete(incidentId) {
+    try {
+      await api.delete(`incidents/${incidentId}`, {headers: {Authorization: ongId}});
+      setIncidents(incidents.filter(incident => incident.id !== incidentId));
+    } catch (error) {
+      alert("Erro ao deletar o caso, favor tente novamente.");
+    }
+  }
+
   return (
     <div className="list-cases-container">
       <header>
@@ -47,7 +56,7 @@ export default function ListCases() {
             <strong>VALOR:</strong>
             <p>{Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.value)}</p>
 
-            <button>
+            <button onClick={() => handleDelete(item.id)}>
               <FiTrash2 size={20} color="#a8a8b3" />
             </button>
           </li>
