@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FiPower, FiTrash2 } from "react-icons/fi";
 
 import api from "../../services/api";
@@ -12,6 +12,8 @@ export default function ListCases() {
   const ongId = localStorage.getItem("ongId");
   const ongName = localStorage.getItem("ongName");
   const [incidents, setIncidents] = useState([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     async function loadIncidents() {
@@ -29,6 +31,11 @@ export default function ListCases() {
     }
   }
 
+  function handleLogout() {
+    localStorage.clear();
+    history.push("/");
+  }
+
   return (
     <div className="list-cases-container">
       <header>
@@ -37,7 +44,7 @@ export default function ListCases() {
         <Link className="button" to="/incidents/new">
           Cadastrar novo caso
         </Link>
-        <button>
+        <button onClick={handleLogout}>
           <FiPower size={18} color="#e02041" />
         </button>
       </header>
