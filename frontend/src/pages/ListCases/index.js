@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiPower, FiTrash2 } from "react-icons/fi";
 
+import api from "../../services/api";
+
 import "./style.css";
 
 import logoImg from "../../assets/logo.svg";
 
 export default function ListCases() {
-  const [ongName, setOngName] = useState("");
+  const ongId = localStorage.getItem("ongId");
+  const ongName = localStorage.getItem("ongName");
+  const [incidents, setIncidents] = useState([]);
 
   useEffect(() => {
-    setOngName(localStorage.getItem("ongName"));
-  }, [])
+    async function loadIncidents() {
+      setIncidents((await api.get(`/ongs/${ongId}/incidents`)).data);
+    }
+    loadIncidents();
+  }, [ongId]);
 
   return (
     <div className="list-cases-container">
@@ -29,20 +36,22 @@ export default function ListCases() {
       <h1>Casos cadastrados</h1>
 
       <ul>
-        <li>
-          <strong>CASO:</strong>
-          <p>Cadelinha atropelada</p>
+        {incidents.map(item => (
+          <li key={item.id}>
+            <strong>CASO:</strong>
+            <p>{item.title}</p>
 
-          <strong>DESCRIÇÃO:</strong>
-          <p>Cadelinha atropelada</p>
+            <strong>DESCRIÇÃO:</strong>
+            <p>{item.description}</p>
 
-          <strong>VALOR:</strong>
-          <p>R$ 120,00</p>
+            <strong>VALOR:</strong>
+            <p>R$ {item.value}</p>
 
-          <button>
-            <FiTrash2 size={20} color="#a8a8b3" />
-          </button>
-        </li>
+            <button>
+              <FiTrash2 size={20} color="#a8a8b3" />
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
   );
