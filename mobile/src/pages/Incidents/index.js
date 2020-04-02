@@ -22,8 +22,8 @@ export default function Incidents() {
       loadIncidents();
   }, []);
 
-  function navigateToDetail() {
-      navigation.navigate('Details');
+  function navigateToDetail(incident) {
+      navigation.navigate('Details', { incident });
   }
 
   return (
@@ -45,17 +45,17 @@ export default function Incidents() {
         renderItem={({ item: incident}) => (
           <View style={styles.incident}>
             <Text style={styles.incidentProperty}>ONG:</Text>
-            <Text style={styles.incidentValue}>{incident.title}</Text>
+            <Text style={styles.incidentValue}>{incident.name}</Text>
 
             <Text style={styles.incidentProperty}>CASO:</Text>
-            <Text style={styles.incidentValue}>{incident.description}</Text>
+            <Text style={styles.incidentValue}>{incident.title}</Text>
 
             <Text style={styles.incidentProperty}>Valor:</Text>
             <Text style={styles.incidentValue}>
-                {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)}
+              {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)}
             </Text>
 
-            <TouchableOpacity style={styles.detailsButton} onPress={navigateToDetail}>
+            <TouchableOpacity style={styles.detailsButton} onPress={() => navigateToDetail(incident)}>
               <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
               <Feather name="arrow-right" size={16} color="#e02041" />
             </TouchableOpacity>

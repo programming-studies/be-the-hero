@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, Linking } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import * as MailComposer from 'expo-mail-composer';
 
@@ -10,6 +10,8 @@ import logoImg from "../../assets/logo.png";
 
 export default function Detail() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const [incident, setIncident] = useState(route.params.incident);
   const message = 'Olá APAD, estou entrando em contato pois gostaria de ajudar no caso "Cadelinha atropelada" com o valor de R$ 120,00';
 
   function navigateBack() {
@@ -38,19 +40,18 @@ export default function Detail() {
       </View>
       <View style={styles.incident}>
         <Text style={[styles.incidentProperty, { marginTop: 0 }]}>CASO:</Text>
-        <Text style={styles.incidentValue}>Cadelinha atropelada</Text>
+        <Text style={styles.incidentValue}>{incident.title}</Text>
 
         <Text style={styles.incidentProperty}>ONG:</Text>
-        <Text style={styles.incidentValue}>APAD</Text>
+        <Text style={styles.incidentValue}>{incident.name}</Text>
 
         <Text style={styles.incidentProperty}>DESCRIÇÃO:</Text>
-        <Text style={styles.incidentValue}>
-          A cadelinha Julia foi atropelada por um carro no bairro e teve que
-          passar por uma cirurgia as pressas.
-        </Text>
+        <Text style={styles.incidentValue}>{incident.description}</Text>
 
         <Text style={styles.incidentProperty}>VALOR:</Text>
-        <Text style={styles.incidentValue}>R$ 120,00</Text>
+        <Text style={styles.incidentValue}>
+          {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)}
+        </Text>
       </View>
 
       <View style={styles.contactBox}>
