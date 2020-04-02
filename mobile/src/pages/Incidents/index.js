@@ -11,19 +11,28 @@ import styles from "./style";
 export default function Incidents() {
   const [incidents, setIncidents] = useState([]);
   const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
-      async function loadIncidents() {
-        const response = await api.get(`incidents`);
-        setIncidents(response.data);
-        setTotal(response.headers['x-total-count']);
-      }
-      loadIncidents();
+    loadIncidents();
   }, []);
 
   function navigateToDetail(incident) {
-      navigation.navigate('Details', { incident });
+    navigation.navigate("Details", { incident });
+  }
+
+  async function loadIncidents() {
+    if (loading || (total > 0 && total == incidents.length)) {
+      return;
+    }
+    setLoading(true);
+    const response = await api.get('incidents', { page });
+    setIncidents([...incidents, ...response.data]);
+    setTotal(response.headers["x-total-count"]);
+    setPage(page + 1);
+    setLoading(false);
   }
 
   return (
@@ -31,7 +40,7 @@ export default function Incidents() {
       <View style={styles.header}>
         <Image source={logoImg} />
         <Text style={styles.headerText}>
-          Total de <Text style={styles.headerTextBold}>{total} casos</Text>.
+          Total de <Text style={styles.headerTextBold}>{total} casos | PAGE: {page}</Text>.
         </Text>
       </View>
       <Text style={styles.title}>Bem-vindo!</Text>
@@ -42,7 +51,9 @@ export default function Incidents() {
         data={incidents}
         keyExtractor={incident => String(incident.id)}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item: incident}) => (
+        onEndReached={loadIncidents}
+        onEndReachedThreshold={0.2}
+        renderItem={({ item: incident }) => (
           <View style={styles.incident}>
             <Text style={styles.incidentProperty}>ONG:</Text>
             <Text style={styles.incidentValue}>{incident.name}</Text>
@@ -52,10 +63,16 @@ export default function Incidents() {
 
             <Text style={styles.incidentProperty}>Valor:</Text>
             <Text style={styles.incidentValue}>
-              {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)}
+              {Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+              }).format(incident.value)}
             </Text>
 
-            <TouchableOpacity style={styles.detailsButton} onPress={() => navigateToDetail(incident)}>
+            <TouchableOpacity
+              style={styles.detailsButton}
+              onPress={() => navigateToDetail(incident)}
+            >
               <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
               <Feather name="arrow-right" size={16} color="#e02041" />
             </TouchableOpacity>
