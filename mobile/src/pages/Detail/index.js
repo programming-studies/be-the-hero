@@ -11,7 +11,8 @@ import logoImg from "../../assets/logo.png";
 export default function Detail() {
   const navigation = useNavigation();
   const route = useRoute();
-  const [incident, setIncident] = useState(route.params.incident);
+
+  const incident = route.params.incident;
   const message = `Olá ${incident.name}, estou entrando em contato pois gostaria de ajudar no caso "${incident.title}" com o valor de ${Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)}`;
 
   function navigateBack() {
@@ -27,7 +28,7 @@ export default function Detail() {
   }
 
   function sendWhatsapp() {
-    Linking.openURL(`whatsapp://send?phone=+5583988202968&text=${message}`)
+    Linking.openURL(`whatsapp://send?phone=${incident.whatsapp}&text=${message}`)
   }
 
   return (
