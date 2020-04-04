@@ -28,6 +28,13 @@ routes.post('/incidents', celebrate({
         authorization: Joi.string().required(),
     })
 }), IncidentsController.store);
-routes.delete('/incidents/:id', IncidentsController.delete);
+routes.delete('/incidents/:id', celebrate({
+    [Segments.HEADERS]: Joi.object().keys({
+        authorization: Joi.string().required(),
+    }).unknown(),
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().required(),
+    })
+}), IncidentsController.delete);
 
 module.exports = routes;
